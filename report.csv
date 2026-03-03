@@ -1,0 +1,9 @@
+domain,agent,classification,allowed,rule_source,matched_rule_directive,matched_rule_path,robots_url,robots_status,robots_error
+anthropic.com,GPTBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.anthropic.com/robots.txt,200,
+anthropic.com,ClaudeBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.anthropic.com/robots.txt,200,
+anthropic.com,Google-Extended,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.anthropic.com/robots.txt,200,
+anthropic.com,CCBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.anthropic.com/robots.txt,200,
+openai.com,GPTBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://openai.com/robots.txt,200,
+openai.com,ClaudeBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://openai.com/robots.txt,200,
+openai.com,Google-Extended,Wildcard Rule (Allowed),True,wildcard,allow,/,https://openai.com/robots.txt,200,
+openai.com,CCBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://openai.com/robots.txt,200,

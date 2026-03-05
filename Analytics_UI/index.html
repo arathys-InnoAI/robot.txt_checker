@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Robots.txt Audit Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --radius: 8px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 1rem 1.25rem;
+      min-height: 100vh;
+    }
+    h1 { font-size: 1.25rem; margin: 0; color: var(--text); }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(88,166,255,0.10), rgba(0,0,0,0)) , var(--surface);
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .topbar .subtitle { color: var(--muted); font-size: 0.85rem; }
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .sidebar {
+      position: sticky;
+      top: 1rem;
+      align-self: start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .sidebar .sidebar-header {
+      padding: 1rem 1rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar .sidebar-header h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .sidebar .sidebar-body { padding: 0.75rem 1rem 1rem; }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .panel h2 { font-size: 0.95rem; margin: 0 0 0.75rem; color: var(--muted); font-weight: 700; }
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .section h2 { font-size: 1rem; margin: 0 0 0.75rem; color: var(--muted); font-weight: 600; }
+    input[type="file"] { color: var(--text); }
+    button, .btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button:hover, .btn:hover { opacity: 0.9; }
+    button.secondary { background: var(--border); color: var(--text); }
+    .filters { display: grid; gap: 0.75rem; }
+    .filter-group { display: grid; gap: 0.35rem; }
+    .filter-group label { font-size: 0.8rem; color: var(--muted); }
+    select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.4rem 0.6rem;
+      width: 100%;
+    }
+    select[multiple] { min-height: 140px; }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      min-width: 120px;
+    }
+    .card .value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+    .card .label { font-size: 0.75rem; color: var(--muted); }
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+    }
+    th { background: var(--bg); color: var(--muted); font-weight: 600; position: sticky; top: 0; }
+    tr:hover { background: rgba(88,166,255,0.06); }
+    .allowed-true { color: var(--green); }
+    .allowed-false { color: var(--red); }
+    .charts { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .chart-box { flex: 1 1 400px; max-width: 500px; height: 280px; }
+    .empty-state { color: var(--muted); padding: 2rem; text-align: center; }
+    .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; }
+    .badge-allowed { background: rgba(63,185,80,0.2); color: var(--green); }
+    .badge-blocked { background: rgba(248,81,73,0.2); color: var(--red); }
+    details {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(15, 20, 25, 0.35);
+      overflow: hidden;
+    }
+    summary {
+      cursor: pointer;
+      padding: 0.6rem 0.75rem;
+      color: var(--text);
+      font-weight: 600;
+      list-style: none;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    details[open] summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 0.75rem; }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div>
+      <h1>Robots.txt Audit Analytics</h1>
+      <div class="subtitle">Upload a CSV and explore allow/block rules by domain and agent.</div>
+    </div>
+    <div class="muted" style="font-size:0.85rem;">
+      <span id="file-name"></span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Filters</h2>
+      </div>
+      <div class="sidebar-body">
+        <div class="filter-group" style="margin-bottom: 0.75rem;">
+          <label>Upload CSV</label>
+          <input type="file" id="file" accept=".csv" />
+          <div class="muted" style="font-size:0.8rem; margin-top:0.35rem;">
+            Use a file from <code>OUTPUT/robots_audit_*.csv</code>.
+          </div>
+        </div>
+
+        <div id="filters-section" style="display:none;">
+          <div class="filters">
+            <details open>
+              <summary>Domain</summary>
+              <div class="details-body">
+                <label class="muted" style="font-size:0.8rem;">Select one or more</label>
+                <select id="filter-domains" multiple></select>
+              </div>
+            </details>
+
+            <details open>
+              <summary>Agent</summary>
+              <div class="details-body">
+                <label class="muted" style="font-size:0.8rem;">Select one or more</label>
+                <select id="filter-agents" multiple></select>
+              </div>
+            </details>
+
+            <details>
+              <summary>Status</summary>
+              <div class="details-body">
+                <div class="filter-group">
+                  <label>Classification</label>
+                  <select id="filter-classification">
+                    <option value="">All</option>
+                    <option value="Explicitly Allowed">Explicitly Allowed</option>
+                    <option value="Explicitly Blocked">Explicitly Blocked</option>
+                    <option value="Wildcard Rule (Allowed)">Wildcard Rule (Allowed)</option>
+                    <option value="Wildcard Rule (Blocked)">Wildcard Rule (Blocked)</option>
+                    <option value="No Matching Rules (Implicitly Allowed)">No Matching Rules</option>
+                  </select>
+                </div>
+                <div class="filter-group" style="margin-top:0.6rem;">
+                  <label>Allowed</label>
+                  <select id="filter-allowed">
+                    <option value="">All</option>
+                    <option value="true">Allowed (true)</option>
+                    <option value="false">Blocked (false)</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <button type="button" id="btn-reset" class="secondary">Reset filters</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div id="empty-state" class="panel">
+        <p class="empty-state">Upload a CSV file to start analysing.</p>
+      </div>
+
+      <div class="panel" id="summary-section" style="display: none;">
+        <h2>Summary</h2>
+        <div class="cards">
+          <div class="card"><div class="value" id="stat-rows">0</div><div class="label">Filtered rows</div></div>
+          <div class="card"><div class="value" id="stat-domains">0</div><div class="label">Unique domains</div></div>
+          <div class="card"><div class="value" id="stat-agents">0</div><div class="label">Unique agents</div></div>
+          <div class="card"><div class="value" id="stat-allowed">0</div><div class="label">Allowed</div></div>
+          <div class="card"><div class="value" id="stat-blocked">0</div><div class="label">Blocked</div></div>
+        </div>
+      </div>
+
+      <div class="panel" id="charts-section" style="display: none;">
+        <h2>Charts</h2>
+        <div class="charts">
+          <div class="chart-box"><canvas id="chart-by-agent"></canvas></div>
+          <div class="chart-box"><canvas id="chart-by-domain"></canvas></div>
+        </div>
+        <div class="muted" style="font-size:0.8rem; margin-top:0.5rem;">Charts show top 25 items for readability.</div>
+      </div>
+
+      <div class="panel" id="table-section" style="display: none;">
+        <h2>Data table</h2>
+        <div class="table-wrap">
+          <table id="data-table">
+            <thead id="table-head"></thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+        <p id="table-count" style="margin-top: 0.5rem; color: var(--muted); font-size: 0.85rem;"></p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let rawData = [];
+    let chartByAgent = null;
+    let chartByDomain = null;
+
+    const fileEl = document.getElementById('file');
+    const fileNameEl = document.getElementById('file-name');
+    const filtersSection = document.getElementById('filters-section');
+    const summarySection = document.getElementById('summary-section');
+    const chartsSection = document.getElementById('charts-section');
+    const tableSection = document.getElementById('table-section');
+    const emptyState = document.getElementById('empty-state');
+
+    fileEl.addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      fileNameEl.textContent = f.name;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const text = ev.target.result;
+        Papa.parse(text, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (res) => {
+            if (res.errors.length) console.warn('Parse warnings:', res.errors);
+            rawData = res.data.map(row => ({
+              ...row,
+              allowed: String(row.allowed || '').toLowerCase() === 'true'
+            }));
+            initFilters();
+            applyFilters();
+            emptyState.style.display = 'none';
+            filtersSection.style.display = 'block';
+            summarySection.style.display = 'block';
+            chartsSection.style.display = 'block';
+            tableSection.style.display = 'block';
+          }
+        });
+      };
+      reader.readAsText(f, 'UTF-8');
+    });
+
+    function getUnique(arr, key) {
+      const s = new Set();
+      arr.forEach(r => { if (r[key]) s.add(r[key]); });
+      return Array.from(s).sort();
+    }
+
+    function initFilters() {
+      const domains = getUnique(rawData, 'domain');
+      const agents = getUnique(rawData, 'agent');
+      const domSel = document.getElementById('filter-domains');
+      const agSel = document.getElementById('filter-agents');
+      domSel.innerHTML = domains.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+      agSel.innerHTML = agents.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+    }
+
+    function escapeHtml(s) {
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    function getSelected(selectId) {
+      const el = document.getElementById(selectId);
+      if (!el) return [];
+      if (el.multiple) return Array.from(el.selectedOptions).map(o => o.value);
+      const v = el.value;
+      return v ? [v] : [];
+    }
+
+    function getFiltered() {
+      let rows = rawData.slice();
+      const domains = getSelected('filter-domains');
+      const agents = getSelected('filter-agents');
+      const classification = getSelected('filter-classification')[0];
+      const allowed = getSelected('filter-allowed')[0];
+
+      if (domains.length) rows = rows.filter(r => domains.includes(r.domain));
+      if (agents.length) rows = rows.filter(r => agents.includes(r.agent));
+      if (classification) rows = rows.filter(r => r.classification === classification);
+      if (allowed === 'true') rows = rows.filter(r => r.allowed === true);
+      if (allowed === 'false') rows = rows.filter(r => r.allowed === false);
+
+      return rows;
+    }
+
+    function applyFilters() {
+      const rows = getFiltered();
+      const domains = getUnique(rows, 'domain');
+      const agents = getUnique(rows, 'agent');
+      const allowedCount = rows.filter(r => r.allowed).length;
+      const blockedCount = rows.filter(r => !r.allowed).length;
+
+      document.getElementById('stat-rows').textContent = rows.length;
+      document.getElementById('stat-domains').textContent = domains.length;
+      document.getElementById('stat-agents').textContent = agents.length;
+      document.getElementById('stat-allowed').textContent = allowedCount;
+      document.getElementById('stat-blocked').textContent = blockedCount;
+
+      renderTable(rows);
+      renderCharts(rows);
+    }
+
+    function renderTable(rows) {
+      const thead = document.getElementById('table-head');
+      const tbody = document.getElementById('table-body');
+      const cols = ['domain', 'agent', 'classification', 'allowed', 'rule_source', 'allow_rules', 'disallow_rules', 'robots_url', 'robots_parsed'];
+      thead.innerHTML = '<tr>' + cols.map(c => `<th>${escapeHtml(c)}</th>`).join('') + '</tr>';
+      tbody.innerHTML = rows.slice(0, 500).map(r => {
+        const allowedClass = r.allowed ? 'allowed-true' : 'allowed-false';
+        const allowVal = (r.allow_rules || '').slice(0, 80) + ((r.allow_rules || '').length > 80 ? '…' : '');
+        const disallowVal = (r.disallow_rules || '').slice(0, 80) + ((r.disallow_rules || '').length > 80 ? '…' : '');
+        return '<tr>' +
+          `<td>${escapeHtml(r.domain)}</td>` +
+          `<td>${escapeHtml(r.agent)}</td>` +
+          `<td>${escapeHtml(r.classification || '')}</td>` +
+          `<td class="${allowedClass}">${r.allowed ? 'Yes' : 'No'}</td>` +
+          `<td>${escapeHtml(r.rule_source || '')}</td>` +
+          `<td title="${escapeHtml(r.allow_rules || '')}">${escapeHtml(allowVal)}</td>` +
+          `<td title="${escapeHtml(r.disallow_rules || '')}">${escapeHtml(disallowVal)}</td>` +
+          `<td><a href="${escapeHtml(r.robots_url || '#')}" target="_blank" rel="noopener" style="color: var(--accent);">link</a></td>` +
+          `<td>${r.robots_parsed === 'True' || r.robots_parsed === true ? 'Yes' : 'No'}</td>` +
+          '</tr>';
+      }).join('');
+      document.getElementById('table-count').textContent =
+        rows.length > 500 ? `Showing first 500 of ${rows.length} rows.` : `${rows.length} rows.`;
+    }
+
+    function renderCharts(rows) {
+      const byAgent = {};
+      const byDomain = {};
+      rows.forEach(r => {
+        byAgent[r.agent] = byAgent[r.agent] || { allowed: 0, blocked: 0 };
+        if (r.allowed) byAgent[r.agent].allowed++; else byAgent[r.agent].blocked++;
+        byDomain[r.domain] = byDomain[r.domain] || { allowed: 0, blocked: 0 };
+        if (r.allowed) byDomain[r.domain].allowed++; else byDomain[r.domain].blocked++;
+      });
+
+      const agentLabels = Object.keys(byAgent).sort();
+      const domainLabels = Object.keys(byDomain).sort();
+
+      if (chartByAgent) chartByAgent.destroy();
+      const ctxAgent = document.getElementById('chart-by-agent').getContext('2d');
+      chartByAgent = new Chart(ctxAgent, {
+        type: 'bar',
+        data: {
+          labels: agentLabels.slice(0, 25),
+          datasets: [
+            { label: 'Allowed', data: agentLabels.slice(0, 25).map(a => byAgent[a].allowed), backgroundColor: '#3fb950' },
+            { label: 'Blocked', data: agentLabels.slice(0, 25).map(a => byAgent[a].blocked), backgroundColor: '#f85149' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'top' } },
+          scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } } }
+        }
+      });
+
+      if (chartByDomain) chartByDomain.destroy();
+      const ctxDomain = document.getElementById('chart-by-domain').getContext('2d');
+      chartByDomain = new Chart(ctxDomain, {
+        type: 'bar',
+        data: {
+          labels: domainLabels.slice(0, 25),
+          datasets: [
+            { label: 'Allowed', data: domainLabels.slice(0, 25).map(d => byDomain[d].allowed), backgroundColor: '#3fb950' },
+            { label: 'Blocked', data: domainLabels.slice(0, 25).map(d => byDomain[d].blocked), backgroundColor: '#f85149' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'top' } },
+          scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } } }
+        }
+      });
+    }
+
+    ['filter-domains', 'filter-agents', 'filter-classification', 'filter-allowed'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', applyFilters);
+    });
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      document.getElementById('filter-domains').selectedIndex = -1;
+      document.getElementById('filter-agents').selectedIndex = -1;
+      document.getElementById('filter-classification').value = '';
+      document.getElementById('filter-allowed').value = '';
+      applyFilters();
+    });
+  </script>
+</body>
+</html>

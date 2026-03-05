@@ -44,12 +44,16 @@ pip install -r requirements.txt
 
 Simple one‑off run:
 
-```bash
-python ai_robots_audit.py ^
-  --domains example.com,openai.com ^
-  --agents GPTBot,ClaudeBot,Google-Extended,CCBot ^
+**PowerShell (Windows):** use backtick `` ` `` at the end of each line to continue.
+
+```powershell
+python ai_robots_audit.py `
+  --domains example.com,openai.com `
+  --agents GPTBot,ClaudeBot,Google-Extended,CCBot `
   --output-dir OUTPUT
 ```
+
+**CMD:** use `^` at the end of each line. **Bash:** use `\`.
 
 This writes:
 
@@ -71,14 +75,16 @@ and shows a short summary in the terminal:
 
 2. **Run the retailer audit**
 
-   ```bash
-   python ai_robots_audit.py ^
-     --domains-file usretailers.txt ^
-     --agents GPTBot,ClaudeBot,Google-Extended,CCBot,Amazonbot,Applebot-Extended,Bytespider,FacebookBot,meta-externalagent,OAI-SearchBot,Claude-SearchBot,PerplexityBot,YouBot,ChatGPT-User,Claude-User ^
-     --knownagents-types ai-data-scraper,ai-search-crawler ^
-     --max-agents 200 ^
+   **PowerShell:**
+   ```powershell
+   python ai_robots_audit.py `
+     --domains-file usretailers.txt `
+     --agents GPTBot,ClaudeBot,Google-Extended,CCBot,Amazonbot,Applebot-Extended,Bytespider,FacebookBot,meta-externalagent,OAI-SearchBot,Claude-SearchBot,PerplexityBot,YouBot,ChatGPT-User,Claude-User `
+     --knownagents-types ai-data-scraper,ai-search-crawler `
+     --max-agents 200 `
      --output-dir OUTPUT
    ```
+   (Use backtick `` ` `` to continue lines. In CMD use `^` instead.)
 
    In the terminal you will also see a summary line with:
 
@@ -127,13 +133,17 @@ This will create CSV rows for:
 - every `User-agent:` name found in that domain’s `robots.txt` (including `*` if present)
 - one extra row called **`DEFAULT/OTHER`** (meaning “any bot not named in this file”)
 
-Example:
-
-```bash
-python ai_robots_audit.py ^
-  --domains openai.com ^
-  --agents-mode robots ^
-  --no-knownagents ^
+**PowerShell:**
+```powershell
+python ai_robots_audit.py `
+  --domains-file usretailers.txt `
+  --agents-mode robots `
+  --no-knownagents `
   --output-dir OUTPUT
+```
+
+Or as a single line (any shell):
+```powershell
+python ai_robots_audit.py --domains-file usretailers.txt --agents-mode robots --no-knownagents --output-dir OUTPUT
 ```
 

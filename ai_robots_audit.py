@@ -336,6 +336,39 @@ def classify(decision: RobotsDecision) -> str:
     return "No Matching Rules (Implicitly Allowed)"
 
 
+RULES_SEP = " | "  # separator for multiple paths in one column (CSV-safe, readable)
+
+
+def get_allow_and_disallow_rules_for_agent(
+    groups: list[RobotsGroup], token: str
+) -> tuple[str, str]:
+    """
+    Return (allow_rules, disallow_rules) for the group(s) that apply to this agent.
+    Each is a string of paths joined by RULES_SEP, or "" if none.
+    """
+    explicit_groups: list[RobotsGroup] = []
+    wildcard_groups: list[RobotsGroup] = []
+    for g in groups:
+        exact, wild = _ua_matches(g.user_agents, token)
+        if exact:
+            explicit_groups.append(g)
+        elif wild:
+            wildcard_groups.append(g)
+    chosen = explicit_groups if explicit_groups else wildcard_groups
+    if not chosen:
+        return ("", "")
+    allow_parts: list[str] = []
+    disallow_parts: list[str] = []
+    for g in chosen:
+        for r in g.rules:
+            path = r.path if r.path else ""
+            if r.directive == "allow":
+                allow_parts.append(path)
+            else:
+                disallow_parts.append(path)
+    return (RULES_SEP.join(allow_parts), RULES_SEP.join(disallow_parts))
+
+
 def _split_csv_arg(v: Optional[str]) -> list[str]:
     if not v:
         return []
@@ -467,7 +500,9 @@ def main(argv: list[str]) -> int:
     robots_html_like = 0
     robots_empty = 0
 
-    for domain in domains:
+    print(f"Checking robots.txt for {total_domains} domain(s)...", flush=True)
+    for idx, domain in enumerate(domains, 1):
+        print(f"  [{idx}/{total_domains}] {domain}", flush=True)
         fetch = _http_get_robots(domain, timeout_s=float(args.timeout))
         status = int(fetch.status_code or 0)
         text = fetch.text or ""
@@ -535,6 +570,9 @@ def main(argv: list[str]) -> int:
         for token in tokens_for_domain:
             eval_token = DEFAULT_OTHER_TOKEN if token == DEFAULT_OTHER_LABEL else token
             decision = decide_access(groups, eval_token, args.path)
+            allow_rules, disallow_rules = (
+                get_allow_and_disallow_rules_for_agent(groups, eval_token) if groups else ("", "")
+            )
             result = {
                 "agent": token,
                 "classification": classify(decision),
@@ -542,6 +580,8 @@ def main(argv: list[str]) -> int:
                 "rule_source": decision.rule_source,
                 "matched_group_user_agents": decision.matched_group_uas,
                 "matched_rule": dataclasses.asdict(decision.matched_rule) if decision.matched_rule else None,
+                "allow_rules": allow_rules,
+                "disallow_rules": disallow_rules,
                 "knownagents": token_map.get(token) if token != DEFAULT_OTHER_LABEL else None,
             }
             domain_entry["results"].append(result)
@@ -554,6 +594,8 @@ def main(argv: list[str]) -> int:
                     "rule_source": result["rule_source"],
                     "matched_rule_directive": (decision.matched_rule.directive if decision.matched_rule else ""),
                     "matched_rule_path": (decision.matched_rule.path if decision.matched_rule else ""),
+                    "allow_rules": allow_rules,
+                    "disallow_rules": disallow_rules,
                     "robots_url": fetch.final_url,
                     "robots_status": fetch.status_code,
                     "robots_error": fetch.error or "",
@@ -577,6 +619,8 @@ def main(argv: list[str]) -> int:
                 "rule_source",
                 "matched_rule_directive",
                 "matched_rule_path",
+                "allow_rules",
+                "disallow_rules",
                 "robots_url",
                 "robots_status",
                 "robots_error",

@@ -1,0 +1,223 @@
+domain,agent,classification,allowed,rule_source,matched_rule_directive,matched_rule_path,robots_url,robots_status,robots_error,robots_parsed,robots_looks_html
+7-eleven.com,*,Explicitly Allowed,True,explicit,,,https://www.7-eleven.com/robots.txt,200,,True,False
+7-eleven.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.7-eleven.com/robots.txt,200,,True,False
+aholddelhaize.com,*,Explicitly Allowed,True,explicit,allow,/,https://aholddelhaize.com/robots.txt,200,,True,False
+aholddelhaize.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,allow,/,https://aholddelhaize.com/robots.txt,200,,True,False
+albertsons.com,*,Explicitly Allowed,True,explicit,allow,/,https://www.albertsons.com/robots.txt,200,,True,False
+albertsons.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.albertsons.com/robots.txt,200,,True,False
+amazon.com,*,Explicitly Allowed,True,explicit,,,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,AI2Bot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Ai2Bot-Dolma,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Brightbot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Bytespider,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,CCBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,ChatGPT-User,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Claude-SearchBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Claude-User,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,ClaudeBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Copilot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,CopilotNative,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,CopilotSapphire,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Devin,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Diffbot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,DuckAssistBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,EtaoSpider,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,FriendlyCrawler,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,GPTBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Gemini-Deep-Research,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Google-CloudVertexBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Google-Extended,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Google-NotebookLM,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,GoogleAgent-Mariner,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,GoogleAgent-Shopping,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,ISSCyberRiskCrawler,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,MistralAI-User,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,OAI-SearchBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,PanguBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Perplexity-User,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,PerplexityBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,PetalBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Scrapy,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,SemrushBot-SWA,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Sidetrade indexer bot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Thinkbot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,Timpibot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,VelenPublicWebCrawler,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,YouBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,aiHitBot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,cohere-ai,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,iaskspider,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,img2dataset,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,imgproxy,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,meta-externalagent,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,meta-externalfetcher,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,omgili,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,wpbot,Explicitly Blocked,False,explicit,disallow,/,https://www.amazon.com/robots.txt,200,,True,False
+amazon.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.amazon.com/robots.txt,200,,True,False
+belk.com,*,Explicitly Allowed,True,explicit,,,https://www.belk.com/robots.txt,200,,True,False
+belk.com,AI2Bot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,AdIdxBot,Explicitly Allowed,True,explicit,,,https://www.belk.com/robots.txt,200,,True,False
+belk.com,AdsBot-Google,Explicitly Allowed,True,explicit,,,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Amazonbot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Applebot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Applebot-Extended,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Baiduspider,Explicitly Blocked,False,explicit,disallow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Baiduspider-image,Explicitly Blocked,False,explicit,disallow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Baiduspider-video,Explicitly Blocked,False,explicit,disallow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,BingBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Bytespider,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,CCBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,ChatGPT-User,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,ChatGPT-User/2.0,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,ClaudeBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Diffbot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,DuckAssistBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,FacebookBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,GPTBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Google-Extended,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,LinkedInBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,MistralAI-User,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,OAI-SearchBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Perplexity-User,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,PerplexityBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Pinterest,Explicitly Allowed,True,explicit,,,https://www.belk.com/robots.txt,200,,True,False
+belk.com,TimpiBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,Yandex,Explicitly Blocked,False,explicit,disallow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,YouBot,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,anthropic-ai,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,claude-web,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,cohere-ai,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,meta-externalagent,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,omgili,Explicitly Allowed,True,explicit,allow,/,https://www.belk.com/robots.txt,200,,True,False
+belk.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.belk.com/robots.txt,200,,True,False
+bestbuy.com,*,Explicitly Allowed,True,explicit,,,https://www.bestbuy.com/robots.txt,200,,True,False
+bestbuy.com,AdsBot-Google,Explicitly Allowed,True,explicit,disallow,,https://www.bestbuy.com/robots.txt,200,,True,False
+bestbuy.com,GetIntentCrawler,Explicitly Blocked,False,explicit,disallow,/,https://www.bestbuy.com/robots.txt,200,,True,False
+bestbuy.com,Google-Display-Ads-Bot,Explicitly Allowed,True,explicit,disallow,,https://www.bestbuy.com/robots.txt,200,,True,False
+bestbuy.com,Googlebot,Explicitly Allowed,True,explicit,,,https://www.bestbuy.com/robots.txt,200,,True,False
+bestbuy.com,Googlebot-Image,Explicitly Allowed,True,explicit,disallow,,https://www.bestbuy.com/robots.txt,200,,True,False
+bestbuy.com,Mediapartners-Google,Explicitly Allowed,True,explicit,disallow,,https://www.bestbuy.com/robots.txt,200,,True,False
+bestbuy.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.bestbuy.com/robots.txt,200,,True,False
+bloomingdales.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.bloomingdales.com/robots.txt,403,,False,True
+caseys.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.caseys.com/robots.txt,403,,False,True
+chewy.com,*,Explicitly Allowed,True,explicit,,,https://www.chewy.com/robots.txt,200,,True,False
+chewy.com,AdsBot-Google,Explicitly Allowed,True,explicit,,,https://www.chewy.com/robots.txt,200,,True,False
+chewy.com,Amazonbot,Explicitly Blocked,False,explicit,disallow,/,https://www.chewy.com/robots.txt,200,,True,False
+chewy.com,adidxbot,Explicitly Allowed,True,explicit,,,https://www.chewy.com/robots.txt,200,,True,False
+chewy.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.chewy.com/robots.txt,200,,True,False
+costco.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://costco.com/robots.txt,0,"ReadTimeout: HTTPSConnectionPool(host='www.costco.com', port=443): Read timed out. (read timeout=15.0)",False,False
+cvs.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.cvs.com/robots.txt,403,,False,True
+dickssportinggoods.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.dickssportinggoods.com/robots.txt,403,,False,True
+dollargeneral.com,*,Explicitly Allowed,True,explicit,allow,/,https://www.dollargeneral.com/robots.txt,200,,True,False
+dollargeneral.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.dollargeneral.com/robots.txt,200,,True,False
+dollartree.com,*,Explicitly Allowed,True,explicit,,,https://www.dollartree.com/robots.txt,200,,True,False
+dollartree.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.dollartree.com/robots.txt,200,,True,False
+doordash.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://doordash.com/robots.txt,403,,False,True
+ebay.com,*,Explicitly Allowed,True,explicit,,,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,AdIdxBot,Explicitly Allowed,True,explicit,,,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,AdsBot-Google,Explicitly Allowed,True,explicit,,,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,AmazonBot,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,Bytespider,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,CCBot,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,ChatGLM-Spider,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,ClaudeBot,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,PerplexityBot,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,Twitterbot,Explicitly Allowed,True,explicit,,,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,anthropic-ai,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,bingbot,Explicitly Allowed,True,explicit,,,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,meta-externalagent,Explicitly Blocked,False,explicit,disallow,/,https://www.ebay.com/robots.txt,200,,True,False
+ebay.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.ebay.com/robots.txt,200,,True,False
+etsy.com,*,Explicitly Allowed,True,explicit,,,https://www.etsy.com/robots.txt,200,,True,False
+etsy.com,AdsBot-Google-Mobile,Explicitly Allowed,True,explicit,,,https://www.etsy.com/robots.txt,200,,True,False
+etsy.com,Spinn3r,Explicitly Blocked,False,explicit,disallow,/,https://www.etsy.com/robots.txt,200,,True,False
+etsy.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.etsy.com/robots.txt,200,,True,False
+foodland.com,*,Explicitly Allowed,True,explicit,allow,/,https://foodland.com/robots.txt,200,,True,False
+foodland.com,Scrapy,Explicitly Allowed,True,explicit,allow,/,https://foodland.com/robots.txt,200,,True,False
+foodland.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,allow,/,https://foodland.com/robots.txt,200,,True,False
+foodlion.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://foodlion.com/robots.txt,403,,False,True
+freshdirect.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://freshdirect.com/robots.txt,0,"ReadTimeout: HTTPSConnectionPool(host='www.freshdirect.com', port=443): Read timed out. (read timeout=15.0)",False,False
+gianteagle.com,*,Explicitly Allowed,True,explicit,,,https://www.gianteagle.com/robots.txt,200,,True,False
+gianteagle.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.gianteagle.com/robots.txt,200,,True,False
+giantfoodstores.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://giantfoodstores.com/robots.txt,403,,False,True
+gopuff.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.gopuff.com/robots.txt,403,,False,True
+hannaford.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://hannaford.com/robots.txt,403,,False,True
+harveyssupermarkets.com,*,Explicitly Allowed,True,explicit,,,https://harveyssupermarkets.com/robots.txt,200,,True,False
+harveyssupermarkets.com,GPTBot,Explicitly Allowed,True,explicit,allow,/,https://harveyssupermarkets.com/robots.txt,200,,True,False
+harveyssupermarkets.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://harveyssupermarkets.com/robots.txt,200,,True,False
+homedepot.com,*,Explicitly Allowed,True,explicit,,,https://www.homedepot.com/robots.txt,200,,True,False
+homedepot.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.homedepot.com/robots.txt,200,,True,False
+hy-vee.com,*,Explicitly Allowed,True,explicit,disallow,,https://storage.googleapis.com/browse-shop-sitemap-storage-prod/robots.txt,200,,True,False
+hy-vee.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,disallow,,https://storage.googleapis.com/browse-shop-sitemap-storage-prod/robots.txt,200,,True,False
+instacart.com,*,Explicitly Blocked,False,explicit,disallow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Adsbot-Google,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Adsbot-Google-Mobile,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Applebot,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Bingbot,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,ChatGPT-User,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,DuckDuckGo,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Facebot,Explicitly Allowed,True,explicit,,,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Googlebot,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Googlebot-Image,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Googlebot-Mobile,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,LinkedInBot,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,OAI-SearchBot,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Perplexity-User,Explicitly Blocked,False,explicit,disallow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,PerplexityBot,Explicitly Blocked,False,explicit,disallow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Slackbot-LinkExpanding,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Slurp,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Storebot-Google,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,Twitterbot,Explicitly Allowed,True,explicit,allow,/,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,facebookexternalhit,Explicitly Allowed,True,explicit,,,https://www.instacart.com/robots.txt,200,,True,False
+instacart.com,DEFAULT/OTHER,Wildcard Rule (Blocked),False,wildcard,disallow,/,https://www.instacart.com/robots.txt,200,,True,False
+kohls.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://kohls.com/robots.txt,403,,False,True
+kroger.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://kroger.com/robots.txt,0,"ReadTimeout: HTTPConnectionPool(host='www.kroger.com', port=80): Read timed out. (read timeout=15.0)",False,False
+lowes.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.lowes.com/robots.txt,403,,False,True
+macys.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.macys.com/robots.txt,403,,False,True
+meijer.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.meijer.com/robots.txt,403,,False,True
+michaels.com,*,Explicitly Allowed,True,explicit,,,https://www.michaels.com/robots.txt,200,,True,False
+michaels.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.michaels.com/robots.txt,200,,True,False
+nordstrom.com,*,Explicitly Allowed,True,explicit,,,https://www.nordstrom.com/robots.txt,200,,True,False
+nordstrom.com,AdsBot-Google,Explicitly Allowed,True,explicit,disallow,,https://www.nordstrom.com/robots.txt,200,,True,False
+nordstrom.com,Googlebot,Explicitly Allowed,True,explicit,,,https://www.nordstrom.com/robots.txt,200,,True,False
+nordstrom.com,Googlebot-Image,Explicitly Allowed,True,explicit,disallow,,https://www.nordstrom.com/robots.txt,200,,True,False
+nordstrom.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.nordstrom.com/robots.txt,200,,True,False
+officedepot.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://officedepot.com/robots.txt,0,"ReadTimeout: HTTPConnectionPool(host='www.officedepot.com', port=80): Read timed out. (read timeout=15.0)",False,False
+petco.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://petco.com/robots.txt,403,,False,True
+petsmart.com,*,Explicitly Allowed,True,explicit,,,https://www.petsmart.com/robots.txt,200,,True,False
+petsmart.com,Googlebot,Explicitly Allowed,True,explicit,,,https://www.petsmart.com/robots.txt,200,,True,False
+petsmart.com,Googlebot-image,Explicitly Allowed,True,explicit,,,https://www.petsmart.com/robots.txt,200,,True,False
+petsmart.com,OAI-SearchBot,Explicitly Allowed,True,explicit,,,https://www.petsmart.com/robots.txt,200,,True,False
+petsmart.com,PerplexityBot,Explicitly Allowed,True,explicit,,,https://www.petsmart.com/robots.txt,200,,True,False
+petsmart.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.petsmart.com/robots.txt,200,,True,False
+pigglywiggly.com,*,Explicitly Allowed,True,explicit,,,https://www.pigglywiggly.com/robots.txt,200,,True,False
+pigglywiggly.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.pigglywiggly.com/robots.txt,200,,True,False
+pricechopper.com,*,Explicitly Allowed,True,explicit,,,https://pricechopper.com/robots.txt,200,,True,False
+pricechopper.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://pricechopper.com/robots.txt,200,,True,False
+saksfifthavenue.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.saksfifthavenue.com/robots.txt,403,,False,True
+samsclub.com,*,Explicitly Allowed,True,explicit,,,https://www.samsclub.com/robots.txt,200,,True,False
+samsclub.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.samsclub.com/robots.txt,200,,True,False
+sephora.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.sephora.com/robots.txt,403,,False,True
+shipt.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.shipt.com/robots.txt,406,,False,False
+smartandfinal.com,*,Explicitly Allowed,True,explicit,allow,/,https://www.smartandfinal.com:443/robots.txt,200,,True,False
+smartandfinal.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.smartandfinal.com:443/robots.txt,200,,True,False
+staples.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://staples.com/robots.txt,0,"ReadTimeout: HTTPConnectionPool(host='staples.com', port=80): Read timed out. (read timeout=15.0)",False,False
+stopandshop.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://stopandshop.com/robots.txt,403,,False,True
+target.com,*,Explicitly Allowed,True,explicit,,,https://www.target.com/robots.txt,200,,True,False
+target.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.target.com/robots.txt,200,,True,False
+ulta.com,*,Explicitly Allowed,True,explicit,,,https://www.ulta.com/robots.txt,200,,True,False
+ulta.com,AdsBot-Google,Explicitly Allowed,True,explicit,,,https://www.ulta.com/robots.txt,200,,True,False
+ulta.com,AdsBot-Google-Mobile,Explicitly Allowed,True,explicit,,,https://www.ulta.com/robots.txt,200,,True,False
+ulta.com,Bytespider,Explicitly Allowed,True,explicit,,,https://www.ulta.com/robots.txt,200,,True,False
+ulta.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.ulta.com/robots.txt,200,,True,False
+walgreens.com,*,Explicitly Allowed,True,explicit,,,https://www.walgreens.com/robots.txt,200,,True,False
+walgreens.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.walgreens.com/robots.txt,200,,True,False
+walmart.com,*,Explicitly Allowed,True,explicit,,,https://www.walmart.com/robots.txt,200,,True,False
+walmart.com,Adsbot-Google,Explicitly Allowed,True,explicit,,,https://www.walmart.com/robots.txt,200,,True,False
+walmart.com,Mediapartners-Google,Explicitly Allowed,True,explicit,,,https://www.walmart.com/robots.txt,200,,True,False
+walmart.com,Slurp,Explicitly Allowed,True,explicit,,,https://www.walmart.com/robots.txt,200,,True,False
+walmart.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.walmart.com/robots.txt,200,,True,False
+wayfair.com,*,Explicitly Allowed,True,explicit,,,https://www.wayfair.com/robots.txt,200,,True,False
+wayfair.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,,,https://www.wayfair.com/robots.txt,200,,True,False
+weismarkets.com,DEFAULT/OTHER,No Matching Rules (Implicitly Allowed),True,none,,,https://www.weismarkets.com/robots.txt,403,,False,True
+www2.wakefern.com,*,Explicitly Allowed,True,explicit,disallow,,https://www2.wakefern.com/robots.txt,200,,True,False
+www2.wakefern.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,disallow,,https://www2.wakefern.com/robots.txt,200,,True,False

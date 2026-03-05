@@ -50,25 +50,38 @@ This command:
 - checks each site’s `robots.txt`
 - focuses on common AI crawler names
 
-```bash
-python ai_robots_audit.py ^
-  --domains-file usretailers.txt ^
-  --agents GPTBot,ClaudeBot,Google-Extended,CCBot,Amazonbot,Applebot-Extended,Bytespider,FacebookBot,meta-externalagent,OAI-SearchBot,Claude-SearchBot,PerplexityBot,YouBot,ChatGPT-User,Claude-User ^
-  --knownagents-types ai-data-scraper,ai-search-crawler ^
-  --max-agents 200 ^
+**PowerShell (Windows):** use a backtick `` ` `` at the end of each line to continue. Do not use `^`.
+
+```powershell
+python ai_robots_audit.py `
+  --domains-file usretailers.txt `
+  --agents GPTBot,ClaudeBot,Google-Extended,CCBot,Amazonbot,Applebot-Extended,Bytespider,FacebookBot,meta-externalagent,OAI-SearchBot,Claude-SearchBot,PerplexityBot,YouBot,ChatGPT-User,Claude-User `
+  --knownagents-types ai-data-scraper,ai-search-crawler `
+  --max-agents 200 `
   --output-dir OUTPUT
+```
+
+**One line (works in PowerShell and CMD):**
+```powershell
+python ai_robots_audit.py --domains-file usretailers.txt --agents GPTBot,ClaudeBot,Google-Extended,CCBot,Amazonbot,Applebot-Extended,Bytespider,FacebookBot,meta-externalagent,OAI-SearchBot,Claude-SearchBot,PerplexityBot,YouBot,ChatGPT-User,Claude-User --knownagents-types ai-data-scraper,ai-search-crawler --max-agents 200 --output-dir OUTPUT
 ```
 
 ## Optional — Let each site decide the agent list
 
 If you want the script to automatically use the `User-agent:` names that the site itself lists in `robots.txt` (instead of providing `--agents`), run:
 
-```bash
-python ai_robots_audit.py ^
-  --domains-file usretailers.txt ^
-  --agents-mode robots ^
-  --no-knownagents ^
+**PowerShell:**
+```powershell
+python ai_robots_audit.py `
+  --domains-file usretailers.txt `
+  --agents-mode robots `
+  --no-knownagents `
   --output-dir OUTPUT
+```
+
+**One line:**
+```powershell
+python ai_robots_audit.py --domains-file usretailers.txt --agents-mode robots --no-knownagents --output-dir OUTPUT
 ```
 
 In this mode, the CSV will include:

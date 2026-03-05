@@ -10,11 +10,16 @@ retailers_report.json
 retailers_report.csv
 tmp.json
 tmp.csv
+testreport.json
+testreport.csv
 
 # Input lists that may change per user
 domains.txt
 domains.csv
 usretailers.txt
+OUTPUT_TEST2/
+OUTPUT_TEST/
+
 
 # Editor / OS noise
 .DS_Store

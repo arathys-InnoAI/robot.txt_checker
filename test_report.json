@@ -1,0 +1,101 @@
+{
+  "path": "/",
+  "agents": [
+    "GPTBot",
+    "ClaudeBot"
+  ],
+  "domains": [
+    {
+      "domain": "anthropic.com",
+      "robots": {
+        "final_url": "https://www.anthropic.com/robots.txt",
+        "status_code": 200,
+        "text": "User-Agent: *\nAllow: /\n\nSitemap: https://www.anthropic.com/sitemap.xml\n",
+        "error": null,
+        "content_type": "text/plain"
+      },
+      "robots_meta": {
+        "parsed": true,
+        "looks_html": false,
+        "has_text": true,
+        "http_ok": true
+      },
+      "results": [
+        {
+          "agent": "GPTBot",
+          "classification": "Wildcard Rule (Allowed)",
+          "allowed": true,
+          "rule_source": "wildcard",
+          "matched_group_user_agents": [
+            "*"
+          ],
+          "matched_rule": {
+            "directive": "allow",
+            "path": "/"
+          },
+          "knownagents": null
+        },
+        {
+          "agent": "ClaudeBot",
+          "classification": "Wildcard Rule (Allowed)",
+          "allowed": true,
+          "rule_source": "wildcard",
+          "matched_group_user_agents": [
+            "*"
+          ],
+          "matched_rule": {
+            "directive": "allow",
+            "path": "/"
+          },
+          "knownagents": null
+        }
+      ]
+    },
+    {
+      "domain": "openai.com",
+      "robots": {
+        "final_url": "https://openai.com/robots.txt",
+        "status_code": 200,
+        "text": "User-agent: *\nAllow: /\nDisallow: /microsoft-for-startups/\n\nSitemap: https://openai.com/sitemap.xml",
+        "error": null,
+        "content_type": "text/plain; charset=utf-8"
+      },
+      "robots_meta": {
+        "parsed": true,
+        "looks_html": false,
+        "has_text": true,
+        "http_ok": true
+      },
+      "results": [
+        {
+          "agent": "GPTBot",
+          "classification": "Wildcard Rule (Allowed)",
+          "allowed": true,
+          "rule_source": "wildcard",
+          "matched_group_user_agents": [
+            "*"
+          ],
+          "matched_rule": {
+            "directive": "allow",
+            "path": "/"
+          },
+          "knownagents": null
+        },
+        {
+          "agent": "ClaudeBot",
+          "classification": "Wildcard Rule (Allowed)",
+          "allowed": true,
+          "rule_source": "wildcard",
+          "matched_group_user_agents": [
+            "*"
+          ],
+          "matched_rule": {
+            "directive": "allow",
+            "path": "/"
+          },
+          "knownagents": null
+        }
+      ]
+    }
+  ]
+}

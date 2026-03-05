@@ -1,0 +1,3 @@
+domain,agent,classification,allowed,rule_source,matched_rule_directive,matched_rule_path,robots_url,robots_status,robots_error,robots_parsed,robots_looks_html
+openai.com,*,Explicitly Allowed,True,explicit,allow,/,https://openai.com/robots.txt,200,,True,False
+openai.com,DEFAULT/OTHER,Wildcard Rule (Allowed),True,wildcard,allow,/,https://openai.com/robots.txt,200,,True,False

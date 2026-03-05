@@ -4,9 +4,11 @@ import argparse
 import csv
 import dataclasses
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Iterable, Literal, Optional
 from urllib.parse import urlparse
 
@@ -35,6 +37,7 @@ class RobotsFetchResult:
     status_code: int
     text: str
     error: Optional[str] = None
+    content_type: Optional[str] = None
 
 
 def _http_get_text(url: str, *, timeout_s: float = 15.0) -> str:
@@ -69,6 +72,7 @@ def _http_get_robots(domain: str, *, timeout_s: float = 15.0) -> RobotsFetchResu
                 status_code=int(resp.status_code),
                 text=resp.text if resp.text is not None else "",
                 error=None,
+                content_type=resp.headers.get("Content-Type"),
             )
         except Exception as e:  # noqa: BLE001 - CLI tool; capture error and continue
             last_exc = f"{type(e).__name__}: {e}"
@@ -77,6 +81,7 @@ def _http_get_robots(domain: str, *, timeout_s: float = 15.0) -> RobotsFetchResu
         status_code=0,
         text="",
         error=last_exc or "Unknown error",
+        content_type=None,
     )
 
 
@@ -347,16 +352,62 @@ def main(argv: list[str]) -> int:
         help="Comma-separated list of agent tokens (e.g. GPTBot,ClaudeBot,Google-Extended,CCBot).",
     )
     p.add_argument(
+        "--agents-mode",
+        choices=["specified", "robots", "robots+specified"],
+        default="specified",
+        help=(
+            "Which agents to output in the CSV. "
+            "'specified' = use --agents (+ KnownAgents). "
+            "'robots' = use the User-agent names found in each domain's robots.txt, plus DEFAULT/OTHER. "
+            "'robots+specified' = union of both."
+        ),
+    )
+    p.add_argument(
         "--knownagents-types",
         default="",
         help="Comma-separated Known Agents type slugs (e.g. ai-data-scraper,ai-search-crawler). Empty = all.",
     )
+    p.add_argument(
+        "--no-knownagents",
+        action="store_true",
+        help="Do not fetch any extra agents from knownagents.com (faster).",
+    )
     p.add_argument("--max-agents", type=int, default=50, help="Max agents to pull from Known Agents.")
     p.add_argument("--path", default="/", help="Path to evaluate (default: /).")
     p.add_argument("--timeout", type=float, default=15.0, help="HTTP timeout seconds.")
-    p.add_argument("--out-json", default="report.json", help="Output JSON file path.")
-    p.add_argument("--out-csv", default="report.csv", help="Output CSV file path.")
+    p.add_argument("--out-json", default="report.json", help="Output JSON file name (or path).")
+    p.add_argument("--out-csv", default="report.csv", help="Output CSV file name (or path).")
+    p.add_argument(
+        "--output-dir",
+        default="OUTPUT",
+        help="Folder where reports will be written (default: OUTPUT).",
+    )
     args = p.parse_args(argv)
+
+    # Resolve output folder and file names (with timestamp if user keeps defaults).
+    output_dir = args.output_dir
+    os.makedirs(output_dir, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    out_json_arg = args.out_json or "report.json"
+    out_csv_arg = args.out_csv or "report.csv"
+
+    if out_json_arg == "report.json":
+        out_json_arg = f"robots_audit_{timestamp}.json"
+    if out_csv_arg == "report.csv":
+        out_csv_arg = f"robots_audit_{timestamp}.csv"
+
+    out_json_path = (
+        os.path.join(output_dir, out_json_arg)
+        if os.path.basename(out_json_arg) == out_json_arg
+        else out_json_arg
+    )
+    out_csv_path = (
+        os.path.join(output_dir, out_csv_arg)
+        if os.path.basename(out_csv_arg) == out_csv_arg
+        else out_csv_arg
+    )
 
     domains: list[str] = []
     domains += [_normalize_domain(d) for d in _split_csv_arg(args.domains)]
@@ -373,42 +424,117 @@ def main(argv: list[str]) -> int:
 
     agent_tokens: list[str] = _split_csv_arg(args.agents)
 
-    # Pull from Known Agents (optional but on by default, because it provides the latest list).
-    knownagents_types = _split_csv_arg(args.knownagents_types)
-    try:
-        token_map = fetch_knownagents_user_agent_tokens(
-            agent_types=knownagents_types,
-            max_agents=max(1, int(args.max_agents)),
-            timeout_s=float(args.timeout),
-        )
-    except Exception as e:  # noqa: BLE001
-        token_map = {}
-        print(f"Known Agents fetch failed: {type(e).__name__}: {e}", file=sys.stderr)
+    # Pull from Known Agents (optional; can be disabled with --no-knownagents).
+    token_map: dict[str, dict[str, Any]] = {}
+    if not args.no_knownagents:
+        knownagents_types = _split_csv_arg(args.knownagents_types)
+        try:
+            token_map = fetch_knownagents_user_agent_tokens(
+                agent_types=knownagents_types,
+                max_agents=max(1, int(args.max_agents)),
+                timeout_s=float(args.timeout),
+            )
+        except Exception as e:  # noqa: BLE001
+            token_map = {}
+            print(f"Known Agents fetch failed: {type(e).__name__}: {e}", file=sys.stderr)
 
     # Merge tokens: explicit CLI tokens first (ensures inclusion even if Known Agents fails).
     merged_tokens = list(dict.fromkeys(agent_tokens + sorted(token_map.keys())))
-    if not merged_tokens:
-        print("No agent tokens found. Provide --agents or ensure Known Agents fetch works.", file=sys.stderr)
+    if args.agents_mode in ("specified", "robots+specified") and not merged_tokens:
+        print(
+            "No agent tokens found for --agents-mode specified. Provide --agents or ensure Known Agents fetch works.",
+            file=sys.stderr,
+        )
         return 2
 
     report: dict[str, Any] = {
         "path": args.path,
+        "agents_mode": args.agents_mode,
         "agents": merged_tokens,
         "domains": [],
+        "generated_at": timestamp,
+        "output_files": {
+            "json": out_json_path,
+            "csv": out_csv_path,
+        },
     }
 
     rows: list[dict[str, Any]] = []
 
+    total_domains = len(domains)
+    robots_parsed_count = 0
+    robots_missing_or_error = 0
+    robots_html_like = 0
+    robots_empty = 0
+
     for domain in domains:
         fetch = _http_get_robots(domain, timeout_s=float(args.timeout))
-        groups = parse_robots_txt(fetch.text) if fetch.status_code and fetch.text else []
+        status = int(fetch.status_code or 0)
+        text = fetch.text or ""
+        content_type = (fetch.content_type or "").lower() if hasattr(fetch, "content_type") else ""
+
+        # Decide if this looks like a real text robots.txt, not HTML.
+        looks_html = "html" in content_type or "<html" in text[:200].lower()
+        has_text = bool(text.strip())
+        is_http_ok = 200 <= status < 400
+        can_parse = is_http_ok and has_text and not looks_html
+
+        if not has_text:
+            robots_empty += 1
+        if looks_html:
+            robots_html_like += 1
+        if not is_http_ok or fetch.error:
+            robots_missing_or_error += 1
+        if can_parse:
+            robots_parsed_count += 1
+
+        groups = parse_robots_txt(text) if can_parse else []
+
+        # Summary about all user-agents in this robots.txt
+        all_uas = sorted({ua for g in groups for ua in g.user_agents}) if groups else []
+        wildcard_decision = decide_access(groups, "*", args.path) if groups else None
+        other_decision = decide_access(groups, "__generic_other_agent__", args.path) if groups else None
+
         domain_entry: dict[str, Any] = {
             "domain": domain,
             "robots": dataclasses.asdict(fetch),
+            "robots_meta": {
+                "parsed": can_parse,
+                "looks_html": looks_html,
+                "has_text": has_text,
+                "http_ok": is_http_ok,
+            },
+            "all_user_agents": all_uas,
+            "wildcard_for_all_agents": {
+                "classification": classify(wildcard_decision) if wildcard_decision else None,
+                "allowed": wildcard_decision.allowed if wildcard_decision else None,
+            }
+            if wildcard_decision
+            else None,
+            "default_for_other_agents": {
+                "classification": classify(other_decision) if other_decision else None,
+                "allowed": other_decision.allowed if other_decision else None,
+            }
+            if other_decision
+            else None,
             "results": [],
         }
-        for token in merged_tokens:
-            decision = decide_access(groups, token, args.path)
+        DEFAULT_OTHER_LABEL = "DEFAULT/OTHER"
+        DEFAULT_OTHER_TOKEN = "__generic_other_agent__"
+
+        robots_tokens = [ua for ua in all_uas]  # already unique + sorted above
+
+        if args.agents_mode == "specified":
+            tokens_for_domain: list[str] = merged_tokens
+        elif args.agents_mode == "robots":
+            tokens_for_domain = robots_tokens + [DEFAULT_OTHER_LABEL]
+        else:  # robots+specified
+            union = list(dict.fromkeys(robots_tokens + merged_tokens))
+            tokens_for_domain = union + [DEFAULT_OTHER_LABEL]
+
+        for token in tokens_for_domain:
+            eval_token = DEFAULT_OTHER_TOKEN if token == DEFAULT_OTHER_LABEL else token
+            decision = decide_access(groups, eval_token, args.path)
             result = {
                 "agent": token,
                 "classification": classify(decision),
@@ -416,7 +542,7 @@ def main(argv: list[str]) -> int:
                 "rule_source": decision.rule_source,
                 "matched_group_user_agents": decision.matched_group_uas,
                 "matched_rule": dataclasses.asdict(decision.matched_rule) if decision.matched_rule else None,
-                "knownagents": token_map.get(token),
+                "knownagents": token_map.get(token) if token != DEFAULT_OTHER_LABEL else None,
             }
             domain_entry["results"].append(result)
             rows.append(
@@ -431,14 +557,16 @@ def main(argv: list[str]) -> int:
                     "robots_url": fetch.final_url,
                     "robots_status": fetch.status_code,
                     "robots_error": fetch.error or "",
+                    "robots_parsed": can_parse,
+                    "robots_looks_html": looks_html,
                 }
             )
         report["domains"].append(domain_entry)
 
-    with open(args.out_json, "w", encoding="utf-8") as f:
+    with open(out_json_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False)
 
-    with open(args.out_csv, "w", encoding="utf-8", newline="") as f:
+    with open(out_csv_path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(
             f,
             fieldnames=[
@@ -452,12 +580,21 @@ def main(argv: list[str]) -> int:
                 "robots_url",
                 "robots_status",
                 "robots_error",
+                "robots_parsed",
+                "robots_looks_html",
             ],
         )
         w.writeheader()
         w.writerows(rows)
 
-    print(f"Wrote {args.out_json} and {args.out_csv}")
+    print(f"Wrote {out_json_path} and {out_csv_path}")
+    print()
+    print("Run summary:")
+    print(f"- Domains given: {total_domains}")
+    print(f"- robots.txt fetched and parsed as text: {robots_parsed_count}")
+    print(f"- robots.txt returned HTML (skipped parsing): {robots_html_like}")
+    print(f"- robots.txt empty body: {robots_empty}")
+    print(f"- robots.txt missing or HTTP error: {robots_missing_or_error}")
     return 0
 
 

@@ -56,9 +56,37 @@ python ai_robots_audit.py ^
   --agents GPTBot,ClaudeBot,Google-Extended,CCBot,Amazonbot,Applebot-Extended,Bytespider,FacebookBot,meta-externalagent,OAI-SearchBot,Claude-SearchBot,PerplexityBot,YouBot,ChatGPT-User,Claude-User ^
   --knownagents-types ai-data-scraper,ai-search-crawler ^
   --max-agents 200 ^
-  --out-json retailers_report.json ^
-  --out-csv retailers_report.csv
+  --output-dir OUTPUT
 ```
+
+## Optional — Let each site decide the agent list
+
+If you want the script to automatically use the `User-agent:` names that the site itself lists in `robots.txt` (instead of providing `--agents`), run:
+
+```bash
+python ai_robots_audit.py ^
+  --domains-file usretailers.txt ^
+  --agents-mode robots ^
+  --no-knownagents ^
+  --output-dir OUTPUT
+```
+
+In this mode, the CSV will include:
+
+- one row for each `User-agent:` name found in that domain’s `robots.txt`
+- one extra row named **`DEFAULT/OTHER`** (this tells you what unnamed bots can do)
+
+When it finishes, the terminal will also show a short summary:
+
+- how many domains were processed
+- how many `robots.txt` files were fetched and parsed as real text
+- how many responses looked like HTML and were skipped
+- how many were empty or had HTTP errors
+
+You will find the actual files in the `OUTPUT` folder, with names like:
+
+- `robots_audit_YYYYMMDD_HHMMSS.json`
+- `robots_audit_YYYYMMDD_HHMMSS.csv`
 
 ## Step 3 — Create a plain-English summary report
 

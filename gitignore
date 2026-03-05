@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Local data files
+report.json
+report.csv
+retailers_report.json
+retailers_report.csv
+tmp.json
+tmp.csv
+
+# Input lists that may change per user
+domains.txt
+domains.csv
+usretailers.txt
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,5 +1,0 @@
-domain,agent,classification,allowed,rule_source,matched_rule_directive,matched_rule_path,robots_url,robots_status,robots_error,robots_parsed,robots_looks_html
-anthropic.com,GPTBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.anthropic.com/robots.txt,200,,True,False
-anthropic.com,ClaudeBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://www.anthropic.com/robots.txt,200,,True,False
-openai.com,GPTBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://openai.com/robots.txt,200,,True,False
-openai.com,ClaudeBot,Wildcard Rule (Allowed),True,wildcard,allow,/,https://openai.com/robots.txt,200,,True,False

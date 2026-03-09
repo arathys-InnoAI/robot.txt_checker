@@ -388,7 +388,7 @@
     function renderTable(rows) {
       const thead = document.getElementById('table-head');
       const tbody = document.getElementById('table-body');
-      const cols = ['domain', 'agent', 'classification', 'allowed', 'rule_source', 'allow_rules', 'disallow_rules', 'robots_url', 'robots_parsed'];
+      const cols = ['domain', 'agent', 'classification', 'allowed', 'rule_source', 'allow_rules', 'disallow_rules', 'agent_type', 'robots_url', 'robots_parsed'];
       thead.innerHTML = '<tr>' + cols.map(c => `<th>${escapeHtml(c)}</th>`).join('') + '</tr>';
       tbody.innerHTML = rows.slice(0, 500).map(r => {
         const allowedClass = r.allowed ? 'allowed-true' : 'allowed-false';
@@ -402,6 +402,7 @@
           `<td>${escapeHtml(r.rule_source || '')}</td>` +
           `<td title="${escapeHtml(r.allow_rules || '')}">${escapeHtml(allowVal)}</td>` +
           `<td title="${escapeHtml(r.disallow_rules || '')}">${escapeHtml(disallowVal)}</td>` +
+          `<td>${escapeHtml(r.agent_type || '')}</td>` +
           `<td><a href="${escapeHtml(r.robots_url || '#')}" target="_blank" rel="noopener" style="color: var(--accent);">link</a></td>` +
           `<td>${r.robots_parsed === 'True' || r.robots_parsed === true ? 'Yes' : 'No'}</td>` +
           '</tr>';

@@ -19,7 +19,7 @@ domains.csv
 usretailers.txt
 OUTPUT_TEST2/
 OUTPUT_TEST/
-
+OUTPUT/
 
 # Editor / OS noise
 .DS_Store

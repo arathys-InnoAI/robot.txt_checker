@@ -119,6 +119,164 @@ def extract_user_agents_from_agent_page(agent_html: str) -> list[str]:
     return []
 
 
+# Category labels as on https://knownagents.com/agents (section headings).
+# Map detail-page "Agent Type" (singular/short) -> category label for CSV.
+KNOWNAGENTS_CATEGORIES = [
+    "All Agent Types",
+    "AI Agents",
+    "AI Assistants",
+    "AI Data Scrapers",
+    "AI Search Crawlers",
+    "Archivers",
+    "Automated Agents",
+    "Developer Helpers",
+    "Fetchers",
+    "Intelligence Gatherers",
+    "Scrapers",
+    "Search Engine Crawlers",
+    "Security Scanners",
+    "SEO Crawlers",
+    "Uncategorized Agents",
+    "Undocumented AI Agents",
+]
+
+# Known Agents filter slugs (used by https://knownagents.com/agents?agent_type_url_slug=...).
+# We use these to assign a stable category label without relying on parsing the detail page HTML
+# (which may be JS-rendered and not include the Agent Type text in the initial response).
+KNOWNAGENTS_TYPE_FILTER_SLUGS = [
+    "ai-agent",
+    "ai-assistant",
+    "ai-data-scraper",
+    "ai-search-crawler",
+    "archiver",
+    "automated-agent",
+    "developer-helper",
+    "fetcher",
+    "intelligence-gatherer",
+    "scraper",
+    "search-engine-crawler",
+    "security-scanner",
+    "seo-crawler",
+    "uncategorized",
+    "undocumented-ai-agent",
+]
+
+# Map raw extracted type (e.g. "AI Data Scraper") -> category (e.g. "AI Data Scrapers").
+_RAW_TO_CATEGORY = {
+    "all agent types": "All Agent Types",
+    "ai agents": "AI Agents",
+    "ai agent": "AI Agents",
+    "ai assistants": "AI Assistants",
+    "ai assistant": "AI Assistants",
+    "ai data scrapers": "AI Data Scrapers",
+    "ai data scraper": "AI Data Scrapers",
+    "ai search crawlers": "AI Search Crawlers",
+    "ai search crawler": "AI Search Crawlers",
+    "archivers": "Archivers",
+    "archiver": "Archivers",
+    "automated agents": "Automated Agents",
+    "automated agent": "Automated Agents",
+    "developer helpers": "Developer Helpers",
+    "developer helper": "Developer Helpers",
+    "fetchers": "Fetchers",
+    "fetcher": "Fetchers",
+    "intelligence gatherers": "Intelligence Gatherers",
+    "intelligence gatherer": "Intelligence Gatherers",
+    "scrapers": "Scrapers",
+    "scraper": "Scrapers",
+    "search engine crawlers": "Search Engine Crawlers",
+    "search engine crawler": "Search Engine Crawlers",
+    "security scanners": "Security Scanners",
+    "security scanner": "Security Scanners",
+    "seo crawlers": "SEO Crawlers",
+    "seo crawler": "SEO Crawlers",
+    "uncategorized agents": "Uncategorized Agents",
+    "uncategorized": "Uncategorized Agents",
+    "uncategorized agent": "Uncategorized Agents",
+    "undocumented ai agents": "Undocumented AI Agents",
+    "undocumented ai agent": "Undocumented AI Agents",
+    # Known Agents page sometimes returns this label instead of a category.
+    "expected behavior": "Uncategorized Agents",
+    "expected behaviour": "Uncategorized Agents",
+}
+
+
+def _agent_type_to_category(raw: str) -> str:
+    if not raw or not raw.strip():
+        return ""
+    key = raw.strip().lower()
+    return _RAW_TO_CATEGORY.get(key, raw.strip())
+
+
+def knownagents_type_slug_to_category(type_slug: str) -> str:
+    """
+    Convert Known Agents filter slug (e.g. "ai-data-scraper") to our category label
+    (e.g. "AI Data Scrapers"). Returns "" if empty/unknown.
+    """
+    if not type_slug:
+        return ""
+    raw = type_slug.strip().lower().replace("-", " ")
+    return _agent_type_to_category(raw)
+
+
+def extract_agent_type_from_agent_page(agent_html: str) -> Optional[str]:
+    """
+    Extract the Agent Type from a Known Agents detail page (HTML or markdown).
+    Returns the category label as on knownagents.com/agents (e.g. "AI Data Scrapers").
+    """
+    bad_values = {
+        "agent type",
+        "expected behavior",
+        "expected behaviour",
+        "detail",
+        "global insights",
+        "user agent documentation",
+    }
+    # Markdown-style: ## Agent Type\n\nAI Data Scraper
+    m = re.search(r"##\s*Agent\s+Type\s*\n\s*([^\n#<]+)", agent_html, re.IGNORECASE)
+    if m:
+        s = m.group(1).strip()
+        if s and s.strip().lower() not in bad_values:
+            return _agent_type_to_category(s)
+    # HTML: Agent Type</...>...<...>AI Data Scraper</...>
+    m2 = re.search(r"Agent\s+Type\s*</[^>]+>\s*<[^>]+>([^<]+)", agent_html, re.IGNORECASE | re.DOTALL)
+    if m2:
+        s = m2.group(1).strip()
+        if s and len(s) < 80 and s.strip().lower() not in bad_values:
+            return _agent_type_to_category(s)
+    return None
+
+
+def token_to_knownagents_slug(token: str) -> str:
+    """Convert agent token to knownagents.com URL slug (e.g. GPTBot -> gptbot)."""
+    return token.lower().replace(" ", "-").replace("_", "-")
+
+
+def fetch_agent_type_for_token(
+    token: str,
+    timeout_s: float,
+    cache: dict[str, Optional[str]],
+) -> Optional[str]:
+    """
+    Fetch agent type from knownagents.com for this token; use and update cache.
+    Returns None if token is DEFAULT/OTHER, page not found, or extraction fails.
+    """
+    if not token or token == "__generic_other_agent__":
+        return None
+    if token in cache:
+        return cache[token]
+    slug = token_to_knownagents_slug(token)
+    url = KNOWNAGENTS_AGENT_URL.format(slug=slug)
+    try:
+        html = _http_get_text(url, timeout_s=timeout_s)
+        at = extract_agent_type_from_agent_page(html)
+        cache[token] = at
+        return at
+    except Exception:  # noqa: BLE001
+        cache[token] = None
+        return None
+
+
 def fetch_knownagents_user_agent_tokens(
     *,
     agent_types: list[str],
@@ -127,22 +285,34 @@ def fetch_knownagents_user_agent_tokens(
 ) -> dict[str, dict[str, Any]]:
     """
     Returns a mapping:
-      token -> { "token": str, "slugs": [...], "source": "knownagents", "agent_urls": [...] }
+      token -> {
+        "token": str,
+        "slugs": [...],
+        "source": "knownagents",
+        "agent_urls": [...],
+        "agent_type": Optional[str],
+      }
     """
     token_map: dict[str, dict[str, Any]] = {}
 
+    # If no filters were provided, fetch each category filter so we can
+    # assign a stable category label per agent slug.
     if not agent_types:
-        agent_types = [""]
+        agent_types = list(KNOWNAGENTS_TYPE_FILTER_SLUGS)
 
     seen_slugs: set[str] = set()
     slugs: list[str] = []
+    slug_to_category: dict[str, str] = {}
     for t in agent_types:
         url = KNOWNAGENTS_LIST_URL if not t else f"{KNOWNAGENTS_LIST_URL}?agent_type_url_slug={t}"
         html = _http_get_text(url, timeout_s=timeout_s)
+        category = knownagents_type_slug_to_category(t) if t else ""
         for s in parse_knownagents_slugs(html):
             if s not in seen_slugs:
                 seen_slugs.add(s)
                 slugs.append(s)
+                if category and s not in slug_to_category:
+                    slug_to_category[s] = category
             if len(slugs) >= max_agents:
                 break
         if len(slugs) >= max_agents:
@@ -155,15 +325,46 @@ def fetch_knownagents_user_agent_tokens(
         except Exception:  # noqa: BLE001
             continue
         tokens = extract_user_agents_from_agent_page(html)
+        agent_type = slug_to_category.get(slug) or extract_agent_type_from_agent_page(html)
         for token in tokens:
             entry = token_map.setdefault(
                 token,
-                {"token": token, "slugs": [], "agent_urls": [], "source": "knownagents"},
+                {"token": token, "slugs": [], "agent_urls": [], "source": "knownagents", "agent_type": None},
             )
             entry["slugs"].append(slug)
             entry["agent_urls"].append(url)
+            if agent_type and not entry.get("agent_type"):
+                entry["agent_type"] = agent_type
 
     return token_map
+
+
+def fetch_knownagents_slug_to_category(
+    *,
+    agent_types: list[str],
+    timeout_s: float,
+) -> dict[str, str]:
+    """
+    Build slug -> category label mapping by fetching the Known Agents listing pages
+    for each type filter slug.
+
+    This is more reliable than parsing the agent detail page HTML (which may be
+    JS-rendered and omit the Agent Type text in the initial response).
+    """
+    if not agent_types:
+        agent_types = list(KNOWNAGENTS_TYPE_FILTER_SLUGS)
+
+    slug_to_category: dict[str, str] = {}
+    for t in agent_types:
+        url = KNOWNAGENTS_LIST_URL if not t else f"{KNOWNAGENTS_LIST_URL}?agent_type_url_slug={t}"
+        html = _http_get_text(url, timeout_s=timeout_s)
+        category = knownagents_type_slug_to_category(t) if t else ""
+        if not category:
+            continue
+        for slug in parse_knownagents_slugs(html):
+            # First category wins (some agents may appear in multiple places).
+            slug_to_category.setdefault(slug, category)
+    return slug_to_category
 
 
 def parse_robots_txt(text: str) -> list[RobotsGroup]:
@@ -459,9 +660,14 @@ def main(argv: list[str]) -> int:
 
     # Pull from Known Agents (optional; can be disabled with --no-knownagents).
     token_map: dict[str, dict[str, Any]] = {}
+    knownagents_slug_to_category: dict[str, str] = {}
     if not args.no_knownagents:
         knownagents_types = _split_csv_arg(args.knownagents_types)
         try:
+            knownagents_slug_to_category = fetch_knownagents_slug_to_category(
+                agent_types=knownagents_types,
+                timeout_s=float(args.timeout),
+            )
             token_map = fetch_knownagents_user_agent_tokens(
                 agent_types=knownagents_types,
                 max_agents=max(1, int(args.max_agents)),
@@ -469,6 +675,7 @@ def main(argv: list[str]) -> int:
             )
         except Exception as e:  # noqa: BLE001
             token_map = {}
+            knownagents_slug_to_category = {}
             print(f"Known Agents fetch failed: {type(e).__name__}: {e}", file=sys.stderr)
 
     # Merge tokens: explicit CLI tokens first (ensures inclusion even if Known Agents fails).
@@ -479,6 +686,13 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return 2
+
+    # Cache for agent_type lookups from knownagents.com (token -> agent_type or None).
+    # Pre-fill from token_map so we don't re-fetch agents we already have.
+    agent_type_cache: dict[str, Optional[str]] = {}
+    for t, info in token_map.items():
+        if info.get("agent_type"):
+            agent_type_cache[t] = info["agent_type"]
 
     report: dict[str, Any] = {
         "path": args.path,
@@ -573,6 +787,26 @@ def main(argv: list[str]) -> int:
             allow_rules, disallow_rules = (
                 get_allow_and_disallow_rules_for_agent(groups, eval_token) if groups else ("", "")
             )
+            known_info = token_map.get(token) if token != DEFAULT_OTHER_LABEL else None
+            agent_type = (known_info or {}).get("agent_type") if known_info else None
+            if agent_type is None and token != DEFAULT_OTHER_LABEL and eval_token != DEFAULT_OTHER_TOKEN:
+                # Prefer listing-page category mapping (slug -> category).
+                slug = token_to_knownagents_slug(eval_token)
+                mapped = knownagents_slug_to_category.get(slug)
+                if mapped:
+                    agent_type = mapped
+                    if known_info is None:
+                        known_info = {
+                            "token": token,
+                            "slugs": [slug],
+                            "agent_urls": [KNOWNAGENTS_AGENT_URL.format(slug=slug)],
+                            "source": "knownagents",
+                            "agent_type": mapped,
+                        }
+                else:
+                    # Fallback to per-token fetch (may be less reliable, but can help if
+                    # the slug isn't present in listing pages or user restricted types).
+                    agent_type = fetch_agent_type_for_token(eval_token, float(args.timeout), agent_type_cache)
             result = {
                 "agent": token,
                 "classification": classify(decision),
@@ -582,7 +816,8 @@ def main(argv: list[str]) -> int:
                 "matched_rule": dataclasses.asdict(decision.matched_rule) if decision.matched_rule else None,
                 "allow_rules": allow_rules,
                 "disallow_rules": disallow_rules,
-                "knownagents": token_map.get(token) if token != DEFAULT_OTHER_LABEL else None,
+                "agent_type": agent_type,
+                "knownagents": known_info,
             }
             domain_entry["results"].append(result)
             rows.append(
@@ -596,6 +831,7 @@ def main(argv: list[str]) -> int:
                     "matched_rule_path": (decision.matched_rule.path if decision.matched_rule else ""),
                     "allow_rules": allow_rules,
                     "disallow_rules": disallow_rules,
+                    "agent_type": agent_type or "",
                     "robots_url": fetch.final_url,
                     "robots_status": fetch.status_code,
                     "robots_error": fetch.error or "",
@@ -621,6 +857,7 @@ def main(argv: list[str]) -> int:
                 "matched_rule_path",
                 "allow_rules",
                 "disallow_rules",
+                "agent_type",
                 "robots_url",
                 "robots_status",
                 "robots_error",
